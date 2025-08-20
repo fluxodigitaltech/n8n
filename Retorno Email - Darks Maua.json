@@ -1,0 +1,216 @@
+{
+  "name": "Retorno Email - Darks Maua",
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "={{ $('Gmail Trigger').item.json.From.match(/<(.+)>/)[1] }}",
+        "subject": "Seu contato foi recebido com sucesso",
+        "message": "=<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n  <title>Recebemos seu contato - Darks Gym</title>\n  <style>\n    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');\n  </style>\n</head>\n<body style=\"margin: 0; padding: 0; font-family: 'Montserrat', Arial, sans-serif; background-color: #f5f5f5;\">\n\n  <!-- CONTAINER PRINCIPAL -->\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width: 600px; margin: 20px auto;\">\n    <!-- CABEÇALHO -->\n    <tr>\n      <td style=\"background-color: #000000; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0;\">\n        <img src=\"https://i.postimg.cc/6qgqqXFG/logo-DARK.jpg\" alt=\"Darks Gym\" width=\"180\" style=\"max-width: 100%; height: auto;\" />\n      </td>\n    </tr>\n\n    <!-- CORPO DO E-MAIL -->\n    <tr>\n      <td style=\"background-color: #ffffff; padding: 40px 30px;\">\n        <h1 style=\"color: #000000; font-size: 24px; font-weight: 700; margin: 0 0 20px 0; text-align: center;\">Recebemos seu contato!</h1>\n        \n        <p style=\"color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;\">\n          Prezado(a) ,\n        </p>\n        \n        <p style=\"color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;\">\n          Agradecemos por entrar em contato com a <strong style=\"color: #000000;\">Darks Gym</strong>. Sua mensagem é muito importante para nós.\n        </p>\n        \n        <p style=\"color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;\">\n          Nossa equipe já está analisando sua solicitação e retornaremos o mais breve possível.\n        </p>\n        \n        <div style=\"text-align: center; margin: 30px 0;\">\n          <a href=\"https://www.instagram.com/darksgymmaua\" style=\"display: inline-block; background-color: #000000; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 4px; font-weight: 600; font-size: 14px;\">Siga-nos no Instagram</a>\n        </div>\n      </td>\n    </tr>\n\n    <!-- RODAPÉ -->\n    <tr>\n      <td style=\"background-color: #f8f8f8; padding: 25px 30px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #eeeeee;\">\n        <p style=\"color: #777777; font-size: 12px; line-height: 1.5; margin: 0 0 10px 0;\">\n          Este é um e-mail automático. Por favor, não responda.\n        </p>\n        <p style=\"color: #777777; font-size: 12px; line-height: 1.5; margin: 0 0 10px 0;\">\n          Darks Gym • Academia Premium\n        </p>\n        <p style=\"color: #777777; font-size: 12px; line-height: 1.5; margin: 0;\">\n          &copy; 2025 Darks Gym. Todos os direitos reservados.\n        </p>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1408,
+        768
+      ],
+      "id": "13d937e2-9e58-4799-a7b8-213378ec36dd",
+      "name": "APROVADO",
+      "webhookId": "4eaaa999-3bfc-4978-b8bd-26a025aa2a1d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jOlvFasU7iNBb1Vb",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        752
+      ],
+      "id": "b7713cc1-ae45-4b03-b8d5-a26c15ee5022",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jOlvFasU7iNBb1Vb",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1184,
+        864
+      ],
+      "id": "747b1f8f-6046-4cbd-a427-f0cb2a1a38e1",
+      "name": "Mark a message as read",
+      "webhookId": "f9a13ade-24a8-4ee2-92f9-d3d076a2d466",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jOlvFasU7iNBb1Vb",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "87d5aa39-9948-4062-9abd-3f304ea9af13",
+              "leftValue": "={{ $json.From }}",
+              "rightValue": "darksgym.maua@gmail.com",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        912,
+        752
+      ],
+      "id": "89c6bde9-55bf-4817-b00d-61dbbaf1921a",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        624
+      ],
+      "id": "b160c05d-3fd2-4e96-8196-9d8bd503b867",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {
+    "Gmail Trigger": [
+      {
+        "json": {
+          "id": "1983a5eb210d4b21",
+          "threadId": "1983a5eb210d4b21",
+          "snippet": "Comer",
+          "payload": {
+            "mimeType": "multipart/alternative"
+          },
+          "sizeEstimate": 5697,
+          "historyId": "3922",
+          "internalDate": "1753325930000",
+          "labels": [
+            {
+              "id": "INBOX",
+              "name": "INBOX"
+            },
+            {
+              "id": "IMPORTANT",
+              "name": "IMPORTANT"
+            },
+            {
+              "id": "CATEGORY_PERSONAL",
+              "name": "CATEGORY_PERSONAL"
+            },
+            {
+              "id": "UNREAD",
+              "name": "UNREAD"
+            }
+          ],
+          "From": "Organizacao E Mudanca <organizacaoemudanca@gmail.com>",
+          "Subject": "Olá",
+          "To": "\"darksgym.maua@gmail.com\" <darksgym.maua@gmail.com>"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "APROVADO": {
+      "main": [
+        []
+      ]
+    },
+    "Mark a message as read": {
+      "main": [
+        [
+          {
+            "node": "APROVADO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d4150a49-53bc-4fb2-b6b4-8ea9c3ab924f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b44f951b7bf3125ad5d504525bef11c3378beee4075396ccfaa193a0472caa7b"
+  },
+  "id": "uJXnzmL4FEqP5Rj7",
+  "tags": []
+}
