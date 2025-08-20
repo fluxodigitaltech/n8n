@@ -1,0 +1,410 @@
+{
+  "name": "Boas Vindas Malibu",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "={{ $json.body.server_url }}/group/findGroupInfos/{{ $json.body.instance }}?groupJid={{ $json.body.data.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "BE24D1863BF4-4594-A486-5929559842F8"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        272,
+        48
+      ],
+      "id": "fef09ddd-28cb-41b3-997f-2613069383ba",
+      "name": "Busca grupo"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "add",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "0a9e9719-92a0-451c-9c61-88227d2ef98b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Adicionou"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4f27c10a-7a70-4b29-b84f-2c46ed83c457",
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "remove",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Saiu"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        672,
+        48
+      ],
+      "id": "ec23b3c4-2c00-4189-bfe3-4a9ddc5cb812",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Coleta informações').item.json['id-do-grupo'] }}",
+                    "rightValue": "120363404258471892@g.us",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "964e0670-5d59-4b08-826e-8d3085c62983"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Entra"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        928,
+        32
+      ],
+      "id": "af95807a-e995-4b77-8215-1f67d5ed1cfc",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "874287d9-fc32-4dd3-80f6-67ddee737539",
+              "name": "url-da-evolution",
+              "value": "={{ $('Webhook').item.json.body.server_url }}",
+              "type": "string"
+            },
+            {
+              "id": "86164b33-e6ec-4772-a4c7-5a9536b99625",
+              "name": "instancia",
+              "value": "={{ $('Webhook').item.json.body.instance }}",
+              "type": "string"
+            },
+            {
+              "id": "1457e914-9652-4258-a8f2-a501731b8e98",
+              "name": "apikey",
+              "value": "={{ $('Webhook').item.json.body.apikey }}",
+              "type": "string"
+            },
+            {
+              "id": "355076d4-26e7-4f1b-9106-955ec80232fe",
+              "name": "id-do-grupo",
+              "value": "={{ $('Webhook').item.json.body.data.id }}",
+              "type": "string"
+            },
+            {
+              "id": "0aa87a86-9ba2-43e8-83d8-960b890b6251",
+              "name": "acao",
+              "value": "={{ $('Webhook').item.json.body.data.action }}",
+              "type": "string"
+            },
+            {
+              "id": "04b91915-0060-49a6-8e8f-91f6ac788b25",
+              "name": "nome-do-grupo",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "dbca56f2-b212-4a36-95bf-d05261e70772",
+              "name": "participante",
+              "value": "={{ $('Webhook').item.json.body.data.participants[0] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        48
+      ],
+      "id": "14933db3-8b05-48c1-a2eb-9f3301ed3805",
+      "name": "Coleta informações"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://evo.fluxodigitaltech.com.br/message/sendText/{{ $('Coleta informações').item.json.instancia }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "BE24D1863BF4-4594-A486-5929559842F8"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"{{ $json.participante }}\",\n  \"text\": \"🏁 Parabéns! Você acaba de entrar no Grupo VIP da Malibu!\\n\\nSó por estar aqui, você já está à frente: este grupo é para quem quer mais — mais resultados, mais foco e mais benefícios. 💪\\n\\nAqui, você recebe:\\n✔️ Dicas e conteúdos exclusivos de treino e saúde\\n✔️ Lançamentos de aulas e programas especiais\\n✔️ Acesso antecipado a promoções e pré-matrículas\\n✔️ Tudo isso direto no seu WhatsApp, sem complicação\\n\\n👉 Agora que está dentro, o próximo passo é simples: agende sua aula experimental gratuita e comece a transformar seus objetivos em resultados reais.\\n\\nVocê escolheu a academia certa. A Malibu está pronta para te levar ao próximo nível. Vem com a gente! 🔥\",\n  \"delay\": 1800,\n  \"presence\": \"composing\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "b0c85f36-332a-4076-b1ec-796f07d2fedc",
+      "name": "Busca grupo2"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "malibu",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        64,
+        48
+      ],
+      "id": "8ef6efa5-85ed-42a9-8bc4-5cfa9bfb1960",
+      "name": "Webhook",
+      "webhookId": "1f74fed8-7a16-455e-acf2-f5d7b611b580"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://evo.fluxodigitaltech.com.br/message/sendText/{{ $('Coleta informações').item.json.instancia }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "BE24D1863BF4-4594-A486-5929559842F8"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"{{ $json.key.remoteJid }}\",\n  \"text\": \"🔥 Estaremos soltando todas as novidades de primeira mão no grupo VIP, inclusive a PRÉ VENDA. Fique de olho para não perder nada! EM BREVE.. 👀⏳\\n\\n💪 Prepare-se para as melhores oportunidades!\",\n  \"delay\": 1800,\n  \"presence\": \"composing\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1344,
+        0
+      ],
+      "id": "72a17e76-9cb4-441d-b978-bd1ae600dd6d",
+      "name": "Busca grupo3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.steinhq.com/v1/storages/687d7c36c088333365bfa803/monitoramento",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=[\n  {\n    \"Numero\": \"{{ $json.participante.split('@')[0] }}\",\n    \"data\": \"{{ $now.format('dd/MM/yyyy') }}\",\n    \"status\": \"saiu\"\n  }\n]\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        928,
+        256
+      ],
+      "id": "ed421500-bf33-4c89-bbc2-65ab4ab60f64",
+      "name": "Busca grupo4"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "webh.fluxodigitaltech.com.br",
+            "user-agent": "axios/1.10.0",
+            "content-length": "462",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "webh.fluxodigitaltech.com.br",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "94c0aeedafc5",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "group-participants.update",
+            "instance": "FluxoDigital - Teste",
+            "data": {
+              "id": "120363402057093682@g.us",
+              "author": "5511980884481@s.whatsapp.net",
+              "participants": [
+                "5511980884481@s.whatsapp.net"
+              ],
+              "action": "remove"
+            },
+            "destination": "https://webh.fluxodigitaltech.com.br/webhook/malibu",
+            "date_time": "2025-08-19T11:13:09.949Z",
+            "sender": "5511992479422@s.whatsapp.net",
+            "server_url": "https://evo.fluxodigitaltech.com.br",
+            "apikey": "BE24D1863BF4-4594-A486-5929559842F8"
+          },
+          "webhookUrl": "https://webh.fluxodigitaltech.com.br/webhook/malibu",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Busca grupo": {
+      "main": [
+        [
+          {
+            "node": "Coleta informações",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Busca grupo4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Coleta informações": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Busca grupo2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Busca grupo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Busca grupo2": {
+      "main": [
+        [
+          {
+            "node": "Busca grupo3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2febafac-8227-490a-9458-54441210dff4",
+  "meta": {
+    "instanceId": "b44f951b7bf3125ad5d504525bef11c3378beee4075396ccfaa193a0472caa7b"
+  },
+  "id": "TTXKEdjPL05hn4Fx",
+  "tags": []
+}
