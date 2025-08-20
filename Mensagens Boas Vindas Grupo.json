@@ -1,0 +1,372 @@
+{
+  "name": "Mensagens Boas Vindas Grupo",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d408706e-74ea-4f6c-aa97-fbff1e6e2866",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        64,
+        64
+      ],
+      "id": "deff0a2f-a36d-46ae-b376-c1187be3f819",
+      "name": "Webhook",
+      "webhookId": "d408706e-74ea-4f6c-aa97-fbff1e6e2866"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.body.server_url }}/group/findGroupInfos/{{ $json.body.instance }}?groupJid={{ $json.body.data.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "B4F288647E11-491E-B5D8-844513A954CD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        288,
+        64
+      ],
+      "id": "ea3c1d82-ca52-41e3-aca7-a746a2b11c00",
+      "name": "Busca grupo"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "add",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "0a9e9719-92a0-451c-9c61-88227d2ef98b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Adicionou"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4f27c10a-7a70-4b29-b84f-2c46ed83c457",
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "remove",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Saiu"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        688,
+        64
+      ],
+      "id": "aefc4d36-d41a-420b-8527-da9ba16bf48d",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Coleta informações').item.json['id-do-grupo'] }}",
+                    "rightValue": "120363418175582928@g.us",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "964e0670-5d59-4b08-826e-8d3085c62983"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Teste"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5af0f089-2a2a-4dbb-b7f3-06c2c6189ae5",
+                    "leftValue": "={{ $('Coleta informações').item.json['id-do-grupo'] }}",
+                    "rightValue": "12036341817558299928@g.us",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "grupo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        912,
+        -48
+      ],
+      "id": "39444cf3-d5be-4685-b029-9175bbb01cbf",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "874287d9-fc32-4dd3-80f6-67ddee737539",
+              "name": "url-da-evolution",
+              "value": "={{ $('Webhook').item.json.body.server_url }}",
+              "type": "string"
+            },
+            {
+              "id": "86164b33-e6ec-4772-a4c7-5a9536b99625",
+              "name": "instancia",
+              "value": "={{ $('Webhook').item.json.body.instance }}",
+              "type": "string"
+            },
+            {
+              "id": "1457e914-9652-4258-a8f2-a501731b8e98",
+              "name": "apikey",
+              "value": "={{ $('Webhook').item.json.body.apikey }}",
+              "type": "string"
+            },
+            {
+              "id": "355076d4-26e7-4f1b-9106-955ec80232fe",
+              "name": "id-do-grupo",
+              "value": "={{ $('Webhook').item.json.body.data.id }}",
+              "type": "string"
+            },
+            {
+              "id": "0aa87a86-9ba2-43e8-83d8-960b890b6251",
+              "name": "acao",
+              "value": "={{ $('Webhook').item.json.body.data.action }}",
+              "type": "string"
+            },
+            {
+              "id": "04b91915-0060-49a6-8e8f-91f6ac788b25",
+              "name": "nome-do-grupo",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "dbca56f2-b212-4a36-95bf-d05261e70772",
+              "name": "participante",
+              "value": "={{ $('Webhook').item.json.body.data.participants[0] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        64
+      ],
+      "id": "b2ddde7a-c9de-45f1-ae9a-1932f8acbff4",
+      "name": "Coleta informações"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Coleta informações').item.json['url-da-evolution'] }}/message/sendText/{{ $('Coleta informações').item.json.instancia }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "B4F288647E11-491E-B5D8-844513A954CD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"{{ $('Coleta informações').item.json['id-do-grupo'] }}\",\n  \"text\": \"@{{ $json.participante.replace('@s.whatsapp.net', '') }} Bem vindo ao Grupo {{ $json['nome-do-grupo'] }}\",\n  \"delay\": 1800,\n  \"presence\": \"composing\",\n  \"mentionsEveryOne\": false,\n  \"mentioned\": [\n    \"{{ $json.participante }}\"\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1152,
+        -128
+      ],
+      "id": "b3b56789-adb1-4802-acc9-67621ae4a106",
+      "name": "Busca grupo1"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "webh.fluxodigitaltech.com.br",
+            "user-agent": "axios/1.10.0",
+            "content-length": "458",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "webh.fluxodigitaltech.com.br",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "94c0aeedafc5",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "group-participants.update",
+            "instance": "Cleiton Sampaio",
+            "data": {
+              "id": "120363418175582928@g.us",
+              "author": null,
+              "participants": [
+                "5511992479422@s.whatsapp.net"
+              ],
+              "action": "add"
+            },
+            "destination": "https://webh.fluxodigitaltech.com.br/webhook/d408706e-74ea-4f6c-aa97-fbff1e6e2866",
+            "date_time": "2025-06-25T13:44:04.883Z",
+            "sender": "5511994919351@s.whatsapp.net",
+            "server_url": "https://evo.fluxodigitaltech.com.br",
+            "apikey": "B4F288647E11-491E-B5D8-844513A954CD"
+          },
+          "webhookUrl": "https://webh.fluxodigitaltech.com.br/webhook/d408706e-74ea-4f6c-aa97-fbff1e6e2866",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Busca grupo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Busca grupo": {
+      "main": [
+        [
+          {
+            "node": "Coleta informações",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Coleta informações": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Busca grupo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e840a1a8-a203-4897-8a1e-8747b91a4fbb",
+  "meta": {
+    "instanceId": "b44f951b7bf3125ad5d504525bef11c3378beee4075396ccfaa193a0472caa7b"
+  },
+  "id": "WQCqJDQtXrhTo923",
+  "tags": []
+}
